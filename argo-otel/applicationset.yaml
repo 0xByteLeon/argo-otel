@@ -1,31 +1,47 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: argocd-application-set
+  name: argocd-self-manage
   namespace: argocd
 spec:
   generators:
-    - git:
-        repoURL: https://github.com/0xByteLeon/argo-otel
-        revision: main
-        directories:
-          - path: "argocd"
+    - list:
+        elements:
+          - name: argocd-dev
+            cluster: in-cluster
+            namespace: argocd
+            envValuesFile: values-dev.yaml
+          - name: argocd-qa
+            cluster: qa
+            namespace: argocd
+            envValuesFile: values-qa.yaml
+          - name: argocd-prod
+            cluster: prod
+            namespace: argocd
+            envValuesFile: values-prod.yaml
   template:
     metadata:
-      name: "argocd-managed"
+      name: "{{name}}"
     spec:
       project: default
-      source:
-        repoURL: https://github.com/0xByteLeon/argo-otel
-        targetRevision: main
-        path: "charts/argo-cd"
-        helm:
-          valueFiles:
-            - values.yaml
+      sources:
+        - repoURL: https://argoproj.github.io/argo-helm
+          chart: argo-cd
+          targetRevision: 9.*
+          helm:
+            valueFiles:
+              - $values/values.yaml
+              - $values/{{envValuesFile}}
+        - repoURL: https://github.com/0xByteLeon/argo-otel
+          targetRevision: main
+          ref: values
+          path: argo-otel/argocd
       destination:
-        server: https://kubernetes.default.svc
-        namespace: argocd
+        name: "{{cluster}}"
+        namespace: "{{namespace}}"
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
