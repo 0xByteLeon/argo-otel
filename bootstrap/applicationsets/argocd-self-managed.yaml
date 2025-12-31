@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: argocd-self-managed
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: control-plane
+  template:
+    metadata:
+      name: argocd-{{name}}
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/0xByteLeon/argo-otel
+        targetRevision: main
+        path: bootstrap/argocd
+        helm:
+          valueFiles:
+            - values.yaml
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: argocd
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

@@ -1,4 +1,0 @@
-configs:
-  params:
-    # Local k3d cluster: disable TLS and rely on port-forward or local ingress
-    server.insecure: "true"

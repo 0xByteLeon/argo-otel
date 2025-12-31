@@ -1,4 +1,0 @@
-configs:
-  params:
-    # Keep TLS enabled for non-dev clusters
-    server.insecure: "false"

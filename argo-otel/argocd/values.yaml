@@ -1,8 +1,0 @@
-global:
-  image:
-    # Keep Argo CD aligned with the version initially installed during bootstrap
-    tag: v3.2.3
-
-server:
-  ingress:
-    enabled: false

@@ -1,4 +1,0 @@
-configs:
-  params:
-    # Keep TLS enabled for production
-    server.insecure: "false"
