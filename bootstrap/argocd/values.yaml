@@ -4,6 +4,6 @@ argo-cd:
       tag: v3.2.3
   server:
     metrics:
-      enabled: true
+      enabled: false
       service:
         type: ClusterIP
