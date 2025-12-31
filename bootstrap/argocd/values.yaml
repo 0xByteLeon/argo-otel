@@ -7,3 +7,5 @@ argo-cd:
       enabled: false
       service:
         type: ClusterIP
+  redisSecretInit:
+    enabled: false
