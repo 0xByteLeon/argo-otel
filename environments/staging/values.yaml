@@ -1,0 +1,5 @@
+replicaCount: 2
+nginx:
+  image:
+    tag: "stable"
+    pullPolicy: Always

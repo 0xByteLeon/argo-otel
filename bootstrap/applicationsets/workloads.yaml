@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: nginx-appset
+  namespace: argocd
+spec:
+  generators:
+    - git:
+        repoURL: https://github.com/0xByteLeon/argo-otel
+        revision: main
+        directories:
+          - path: "environments/*"
+  template:
+    metadata:
+      name: "nginx-{{path.basename}}"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/0xByteLeon/argo-otel
+        targetRevision: main
+        path: "charts/nginx"
+        helm:
+          valueFiles:
+            - "environments/{{path.basename}}/values.yaml"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "nginx-{{path.basename}}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
