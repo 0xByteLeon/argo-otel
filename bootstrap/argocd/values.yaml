@@ -1,3 +1,4 @@
-global:
-  image:
-    tag: v3.2.3
+argo-cd:
+  global:
+    image:
+      tag: v3.2.3
