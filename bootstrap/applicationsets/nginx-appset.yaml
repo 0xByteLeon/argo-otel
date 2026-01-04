@@ -39,13 +39,13 @@ spec:
 
         targetRevision: main
 
-        path: environments/{{path.basename}}/nginx
+        path: charts/nginx
 
         helm:
 
           valueFiles:
 
-          - values.yaml
+          - ../../environments/{{path.basename}}/nginx/values.yaml
 
       destination:
 

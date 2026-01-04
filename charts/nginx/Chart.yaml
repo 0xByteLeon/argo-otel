@@ -1,0 +1,23 @@
+
+apiVersion: v2
+
+name: nginx
+
+description: "Platform wrapper chart for nginx (bitnami dependency)"
+
+type: application
+
+version: 0.1.0
+
+appVersion: "1.0.0"
+
+
+
+dependencies:
+
+  - name: nginx
+
+    repository: https://charts.bitnami.com/bitnami
+
+    version: ">=0.0.0"
+
