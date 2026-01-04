@@ -1,33 +1,67 @@
+
 apiVersion: argoproj.io/v1alpha1
+
 kind: ApplicationSet
+
 metadata:
-  name: nginx-appset
+
+  name: nginx
+
   namespace: argocd
+
 spec:
+
   generators:
-    - git:
-        repoURL: https://github.com/0xByteLeon/argo-otel
-        revision: main
-        directories:
-          - path: "environments/*"
+
+  - git:
+
+      repoURL: https://github.com/0xByteLeon/argo-otel
+
+      revision: main
+
+      directories:
+
+      - path: environments/*
+
   template:
+
     metadata:
-      name: "nginx-{{path.basename}}"
+
+      name: nginx-{{path.basename}}
+
     spec:
+
       project: default
+
       source:
+
         repoURL: https://github.com/0xByteLeon/argo-otel
+
         targetRevision: main
-        path: "charts/nginx"
+
+        path: environments/{{path.basename}}/nginx
+
         helm:
+
           valueFiles:
-            - "values/{{path.basename}}.yaml"  # 修改为相对路径
+
+          - values.yaml
+
       destination:
+
         server: https://kubernetes.default.svc
-        namespace: "nginx-{{path.basename}}"
+
+        namespace: nginx-{{path.basename}}
+
       syncPolicy:
+
         automated:
+
           prune: true
+
           selfHeal: true
+
         syncOptions:
+
         - CreateNamespace=true
+

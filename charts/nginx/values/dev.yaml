@@ -1,5 +1,0 @@
-replicaCount: 1
-nginx:
-  image:
-    tag: "latest"
-    pullPolicy: IfNotPresent
