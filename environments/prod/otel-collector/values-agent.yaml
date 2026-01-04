@@ -1,28 +1,97 @@
+
 opentelemetry-collector:
+
   mode: daemonset
+
+
+
+  image:
+
+    repository: otel/opentelemetry-collector-contrib
+
+    tag: "0.121.0"
+
+
+
+  # 关键：关闭 hostPort，避免 DaemonSet 端口冲突
+
+  ports:
+
+    otlp:
+
+      enabled: true
+
+      hostPort: 0
+
+      containerPort: 4317
+
+    otlp-http:
+
+      enabled: true
+
+      hostPort: 0
+
+      containerPort: 4318
+
+
+
   service:
+
     enabled: true
+
+
+
   config:
+
     receivers:
+
       otlp:
+
         protocols:
+
           grpc:
+
             endpoint: 0.0.0.0:4317
+
           http:
+
             endpoint: 0.0.0.0:4318
+
+
+
     processors:
+
       memory_limiter:
+
         check_interval: 5s
+
         limit_percentage: 80
+
         spike_limit_percentage: 25
+
       batch: {}
+
+
+
     exporters:
+
       otlp:
+
         endpoint: otel-collector-gateway:4317
+
         tls:
+
           insecure: true
+
+
+
     service:
+
       pipelines:
+
         traces:  { receivers: [otlp], processors: [memory_limiter, batch], exporters: [otlp] }
+
         metrics: { receivers: [otlp], processors: [memory_limiter, batch], exporters: [otlp] }
+
         logs:    { receivers: [otlp], processors: [memory_limiter, batch], exporters: [otlp] }
+
