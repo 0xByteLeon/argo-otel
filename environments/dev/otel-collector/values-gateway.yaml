@@ -55,6 +55,14 @@ opentelemetry-collector:
 
     exporters:
 
+      otlp/tempo:
+
+        endpoint: tempo-dev:4317
+
+        tls:
+
+          insecure: true
+
       debug:
 
         verbosity: detailed
@@ -65,9 +73,27 @@ opentelemetry-collector:
 
       pipelines:
 
-        traces:  { receivers: [otlp], processors: [memory_limiter, batch], exporters: [debug] }
+        traces:
 
-        metrics: { receivers: [otlp], processors: [memory_limiter, batch], exporters: [debug] }
+          receivers: [otlp]
 
-        logs:    { receivers: [otlp], processors: [memory_limiter, batch], exporters: [debug] }
+          processors: [memory_limiter, batch]
+
+          exporters: [otlp/tempo]
+
+        metrics:
+
+          receivers: [otlp]
+
+          processors: [memory_limiter, batch]
+
+          exporters: [debug]
+
+        logs:
+
+          receivers: [otlp]
+
+          processors: [memory_limiter, batch]
+
+          exporters: [debug]
 
