@@ -1,5 +1,8 @@
 
 opentelemetry-collector:
+  image:
+    repository: otel/opentelemetry-collector-contrib
+    tag: "0.121.0"
 
   mode: daemonset
 

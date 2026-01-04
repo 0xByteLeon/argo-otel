@@ -1,9 +1,15 @@
 
 opentelemetry-collector:
 
+  image:
+
+    repository: otel/opentelemetry-collector-contrib
+
+    tag: "0.121.0"
+
+
+
   mode: deployment
-
-
 
   replicaCount: 2
 
@@ -12,28 +18,6 @@ opentelemetry-collector:
   service:
 
     enabled: true
-
-    ports:
-
-      otlp:
-
-        enabled: true
-
-        containerPort: 4317
-
-        servicePort: 4317
-
-        protocol: TCP
-
-      otlp-http:
-
-        enabled: true
-
-        containerPort: 4318
-
-        servicePort: 4318
-
-        protocol: TCP
 
 
 
@@ -81,27 +65,9 @@ opentelemetry-collector:
 
       pipelines:
 
-        traces:
+        traces:  { receivers: [otlp], processors: [memory_limiter, batch], exporters: [debug] }
 
-          receivers: [otlp]
+        metrics: { receivers: [otlp], processors: [memory_limiter, batch], exporters: [debug] }
 
-          processors: [memory_limiter, batch]
-
-          exporters: [debug]
-
-        metrics:
-
-          receivers: [otlp]
-
-          processors: [memory_limiter, batch]
-
-          exporters: [debug]
-
-        logs:
-
-          receivers: [otlp]
-
-          processors: [memory_limiter, batch]
-
-          exporters: [debug]
+        logs:    { receivers: [otlp], processors: [memory_limiter, batch], exporters: [debug] }
 
