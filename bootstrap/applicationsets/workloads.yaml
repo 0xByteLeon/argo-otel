@@ -21,7 +21,7 @@ spec:
         path: "charts/nginx"
         helm:
           valueFiles:
-            - "environments/{{path.basename}}/values.yaml"
+            - "values/{{path.basename}}.yaml"
       destination:
         server: https://kubernetes.default.svc
         namespace: "nginx-{{path.basename}}"
