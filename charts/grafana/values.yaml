@@ -1,0 +1,33 @@
+
+grafana:
+
+  adminUser: admin
+
+  adminPassword: admin
+
+
+
+  service:
+
+    type: ClusterIP
+
+
+
+  datasources:
+
+    datasources.yaml:
+
+      apiVersion: 1
+
+      datasources:
+
+        - name: Tempo
+
+          type: tempo
+
+          access: proxy
+
+          url: http://tempo-dev:3200
+
+          isDefault: true
+
