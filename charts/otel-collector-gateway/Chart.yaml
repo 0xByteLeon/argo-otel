@@ -1,0 +1,23 @@
+
+apiVersion: v2
+
+name: otel-collector-gateway
+
+description: "Platform wrapper: OpenTelemetry Collector (Gateway Deployment)"
+
+type: application
+
+version: 0.1.0
+
+appVersion: "1.0.0"
+
+
+
+dependencies:
+
+  - name: opentelemetry-collector
+
+    repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+
+    version: ">=0.0.0"
+
