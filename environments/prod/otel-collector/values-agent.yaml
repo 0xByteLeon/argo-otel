@@ -91,7 +91,7 @@ opentelemetry-collector:
 
       otlp:
 
-        endpoint: otel-collector-gateway:4317
+        endpoint: otel-gateway-prod-opentelemetry-collector:4317
 
         tls:
 
