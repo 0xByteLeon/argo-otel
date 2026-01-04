@@ -13,7 +13,7 @@ opentelemetry-collector:
 
 
 
-  # 关键：关闭 hostPort，避免 DaemonSet 端口冲突
+  # 关键：只启用 OTLP，关闭 Jaeger/Zipkin 相关端口（它们默认带 hostPort，易冲突）
 
   ports:
 
@@ -21,17 +21,29 @@ opentelemetry-collector:
 
       enabled: true
 
-      hostPort: 0
-
       containerPort: 4317
 
     otlp-http:
 
       enabled: true
 
-      hostPort: 0
-
       containerPort: 4318
+
+    jaeger-compact:
+
+      enabled: false
+
+    jaeger-grpc:
+
+      enabled: false
+
+    jaeger-thrift:
+
+      enabled: false
+
+    zipkin:
+
+      enabled: false
 
 
 
