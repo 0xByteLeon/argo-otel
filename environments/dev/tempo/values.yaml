@@ -1,0 +1,20 @@
+tempo:
+  # 单机/本地先走最简单的本地存储，后面上对象存储再改
+  # 关键：显式把 OTLP receiver 绑定到 0.0.0.0（避免 localhost 绑定导致集群内不可达）
+  tempo:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+
+  # 资源先给一个保守值，本地跑得稳
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
