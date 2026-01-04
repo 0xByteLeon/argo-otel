@@ -21,7 +21,7 @@ spec:
         path: "charts/nginx"
         helm:
           valueFiles:
-            - "values/{{path.basename}}.yaml"
+            - "values/{{path.basename}}.yaml"  # 修改为相对路径
       destination:
         server: https://kubernetes.default.svc
         namespace: "nginx-{{path.basename}}"
@@ -30,4 +30,4 @@ spec:
           prune: true
           selfHeal: true
         syncOptions:
-        - CreateNamespace=true 
+        - CreateNamespace=true
