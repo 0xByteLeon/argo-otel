@@ -13,8 +13,6 @@ opentelemetry-collector:
 
 
 
-  # 关键：只启用 OTLP，关闭 Jaeger/Zipkin 相关端口（它们默认带 hostPort，易冲突）
-
   ports:
 
     otlp:
@@ -23,11 +21,15 @@ opentelemetry-collector:
 
       containerPort: 4317
 
+      hostPort: ~
+
     otlp-http:
 
       enabled: true
 
       containerPort: 4318
+
+      hostPort: ~
 
     jaeger-compact:
 
