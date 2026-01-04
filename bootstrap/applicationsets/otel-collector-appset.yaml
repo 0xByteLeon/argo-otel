@@ -1,0 +1,83 @@
+
+apiVersion: argoproj.io/v1alpha1
+
+kind: ApplicationSet
+
+metadata:
+
+  name: otel-collector
+
+  namespace: argocd
+
+spec:
+
+  generators:
+
+  - matrix:
+
+      generators:
+
+      - git:
+
+          repoURL: https://github.com/0xByteLeon/argo-otel
+
+          revision: main
+
+          directories:
+
+          - path: environments/*
+
+      - list:
+
+          elements:
+
+          - component: agent
+
+            chartPath: charts/otel-collector-agent
+
+          - component: gateway
+
+            chartPath: charts/otel-collector-gateway
+
+  template:
+
+    metadata:
+
+      name: otel-{{component}}-{{path.basename}}
+
+    spec:
+
+      project: default
+
+      source:
+
+        repoURL: https://github.com/0xByteLeon/argo-otel
+
+        targetRevision: main
+
+        path: '{{chartPath}}'
+
+        helm:
+
+          valueFiles:
+
+          - ../../environments/{{path.basename}}/otel-collector/values-{{component}}.yaml
+
+      destination:
+
+        server: https://kubernetes.default.svc
+
+        namespace: otel-{{path.basename}}
+
+      syncPolicy:
+
+        automated:
+
+          prune: true
+
+          selfHeal: true
+
+        syncOptions:
+
+        - CreateNamespace=true
+
