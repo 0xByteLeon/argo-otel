@@ -15,6 +15,22 @@ opentelemetry-collector:
 
 
 
+  # 让 chart 暴露 metrics 端口（Service + container ports）
+
+  ports:
+
+    metrics:
+
+      enabled: true
+
+      containerPort: 8888
+
+      servicePort: 8888
+
+      protocol: TCP
+
+
+
   service:
 
     enabled: true
