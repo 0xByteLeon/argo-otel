@@ -1,13 +1,39 @@
-prometheus:
-  server:
-    service:
-      type: ClusterIP
-    persistentVolume:
-      enabled: false
 
-    extraScrapeConfigs: |
-      - job_name: "otel-gateway-dev"
-        metrics_path: /metrics
-        static_configs:
-          - targets:
-              - "otel-gateway-dev-opentelemetry-collector.otel-dev.svc.cluster.local:8888"
+server:
+
+  service:
+
+    type: ClusterIP
+
+  persistentVolume:
+
+    enabled: false
+
+
+
+  serverFiles:
+
+    prometheus.yml:
+
+      scrape_configs:
+
+        - job_name: prometheus
+
+          static_configs:
+
+            - targets:
+
+                - localhost:9090
+
+
+
+        - job_name: otel-gateway-dev
+
+          metrics_path: /metrics
+
+          static_configs:
+
+            - targets:
+
+                - otel-gateway-dev-opentelemetry-collector.otel-dev.svc.cluster.local:8888
+
