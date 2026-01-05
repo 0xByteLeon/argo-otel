@@ -1,0 +1,27 @@
+
+prometheus:
+
+  server:
+
+    service:
+
+      type: ClusterIP
+
+    persistentVolume:
+
+      enabled: false
+
+
+
+    # 关键：追加一个 scrape_config 抓 OTel Gateway 自监控指标
+
+    extraScrapeConfigs:
+
+      - job_name: "otel-gateway-dev"
+
+        metrics_path: /metrics
+
+        static_configs:
+
+          - targets: ["otel-gateway-dev-opentelemetry-collector.otel-dev.svc.cluster.local:8888"]
+
