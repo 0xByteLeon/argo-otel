@@ -13,7 +13,7 @@ prometheus:
 
             - alert: OTelCollectorExporterQueueGrowing
 
-              expr: otelcol_exporter_queue_size > 0
+              expr: (otelcol_exporter_queue_size{job=~"otel-(gateway|agent)-dev"} / otelcol_exporter_queue_capacity{job=~"otel-(gateway|agent)-dev"}) > 0.8
 
               for: 5m
 
@@ -29,7 +29,7 @@ prometheus:
 
             - alert: OTelCollectorExporterSendFailedSpans
 
-              expr: rate(otelcol_exporter_send_failed_spans[5m]) > 0
+              expr: sum by (job, exporter, data_type, instance) (rate({__name__=~"otelcol_exporter_send_failed_.*", job=~"otel-(gateway|agent)-dev"}[5m])) > 0
 
               for: 5m
 
