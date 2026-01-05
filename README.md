@@ -13,6 +13,11 @@ kubectl -n argocd port-forward svc/argo-cd-argocd-server 8080:80
 
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d; echo
 
+kubectl port-forward service/argocd-server -n argocd 8081:443
 
 kubectl apply -f bootstrap/applicationsets/nginx-appset.yaml
+
+kubectl -n otel-dev port-forward svc/prometheus-dev-server 19090:80
+
+kubectl -n otel-dev port-forward svc/grafana-dev 19091:80
 

@@ -1,67 +1,63 @@
+prometheus:
+  server:
 
-server:
+    service:
 
-  service:
+      type: ClusterIP
 
-    type: ClusterIP
+    persistentVolume:
 
-  persistentVolume:
-
-    enabled: false
-
-
+      enabled: false
 
   serverFiles:
 
-    prometheus.yml:
+      prometheus.yml:
 
-      scrape_configs:
+        scrape_configs:
 
-        - job_name: prometheus
+          - job_name: prometheus
 
-          static_configs:
+            static_configs:
 
-            - targets:
+              - targets:
 
-                - localhost:9090
+                  - localhost:9090
 
+          - job_name: otel-gateway-dev
 
+            metrics_path: /metrics
 
-        - job_name: otel-gateway-dev
+            static_configs:
 
-          metrics_path: /metrics
+              - targets:
 
-          static_configs:
+                  - otel-gateway-dev-opentelemetry-collector.otel-dev.svc.cluster.local:8888
+      alerting_rules.yml:
+        groups:
+          - name: otel-collector.rules
+            rules:
+              - alert: OTelCollectorExporterQueueSaturationHigh
+                expr: |
+                  (
+                    otelcol_exporter_queue_size{service=~"otel-(gateway|agent)-dev-opentelemetry-collector"}
+                  /
+                    otelcol_exporter_queue_capacity{service=~"otel-(gateway|agent)-dev-opentelemetry-collector"}
+                  ) > 0.8
+                for: 10m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "OTel Collector exporter queue saturation high"
+                  description: "Exporter queue is >80% for 10m on {{ $labels.service }} exporter={{ $labels.exporter }} (instance={{ $labels.instance }})"
 
-            - targets:
-
-                - otel-gateway-dev-opentelemetry-collector.otel-dev.svc.cluster.local:8888
-    alerting_rules.yml:
-      groups:
-        - name: otel-collector.rules
-          rules:
-            - alert: OTelCollectorExporterQueueSaturationHigh
-              expr: |
-                (
-                  otelcol_exporter_queue_size{service=~"otel-(gateway|agent)-dev-opentelemetry-collector"}
-                /
-                  otelcol_exporter_queue_capacity{service=~"otel-(gateway|agent)-dev-opentelemetry-collector"}
-                ) > 0.8
-              for: 10m
-              labels:
-                severity: warning
-              annotations:
-                summary: "OTel Collector exporter queue saturation high"
-                description: "Exporter queue is >80% for 10m on {{ $labels.service }} exporter={{ $labels.exporter }} (instance={{ $labels.instance }})"
-
-            - alert: OTelCollectorExporterSendFailed
-              expr: |
-                sum by (service, exporter) (
-                  rate({__name__=~"otelcol_exporter_send_failed_.*", service=~"otel-(gateway|agent)-dev-opentelemetry-collector"}[5m])
-                ) > 0
-              for: 5m
-              labels:
-                severity: critical
-              annotations:
-                summary: "OTel Collector exporter send failures"
-                description: "Exporter has send failures in last 5m on {{ $labels.service }} exporter={{ $labels.exporter }}"
+              - alert: OTelCollectorExporterSendFailed
+                expr: |
+                  sum by (service, exporter) (
+                    rate({__name__=~"otelcol_exporter_send_failed_.*", service=~"otel-(gateway|agent)-dev-opentelemetry-collector"}[5m])
+                  ) > 0
+                for: 5m
+                labels:
+                  severity: critical
+                annotations:
+                  summary: "OTel Collector exporter send failures"
+                  description: "Exporter has send failures in last 5m on {{ $labels.service }} exporter={{ $labels.exporter }}"
